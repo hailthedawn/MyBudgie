@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.varni.mybudgie.EntryActivity">
+    
+    <TextView
+        android:id="@+id/details_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Groceries"
+        android:textSize="36dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"/>
+
+    <TextView
+        android:id="@+id/details_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/details_title"
+        android:text="Jan. 27th 2018"
+        android:textSize="20dp"
+        android:textColor="@android:color/darker_gray"
+        android:paddingLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/details_desp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/details_subtitle"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."/>
+    
+</RelativeLayout>
