@@ -24,16 +24,16 @@ public class DayActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Jan. 27th Summary");
         int month = getIntent().getIntExtra("month",0);
         int day = getIntent().getIntExtra("day",0);
+        ArrayList<Expense> expenses = (ArrayList<Expense>)getIntent().getSerializableExtra("expenses");
+        ArrayList<Earning> earnings = (ArrayList<Earning>)getIntent().getSerializableExtra("earnings");
         setUpActionBar(month,day);
 
         TextView totalText = (TextView)findViewById(R.id.total_amt);
         ListView expensesView = (ListView)findViewById(R.id.expenses_list);
         ListView earningsView = (ListView)findViewById(R.id.earnings_list);
 
-        ArrayList<BigDecimal> expenses = getExpenseValue();
-        ArrayList<BigDecimal> earnings = getEarningValue();
         BigDecimal expenseTotal = calculateTotal(expenses).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal earningTotal = calculateTotal(earnings).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal earningTotal = calculateEarnTotal(earnings).setScale(2, RoundingMode.HALF_UP);
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(getResources().getConfiguration().locale);
         ((TextView)findViewById(R.id.expenses_total)).setText(currencyFormatter.format(expenseTotal));
         ((TextView)findViewById(R.id.earnings_total)).setText(currencyFormatter.format(earningTotal));
@@ -49,21 +49,19 @@ public class DayActivity extends AppCompatActivity {
         }
 
 
-        EntryAdapter expensesAdapter = new EntryAdapter(getExpenseNames(),expenses);
-        EntryAdapter earningsAdapter = new EntryAdapter(getEarningNames(),earnings);
+        EntryAdapter expensesAdapter = new EntryAdapter(expenses);
+        EntryAdapter earningsAdapter = new EntryAdapter(earnings);
         expensesView.setAdapter(expensesAdapter);
         earningsView.setAdapter(earningsAdapter);
     }
 
     private class EntryAdapter extends BaseAdapter {
 
-        private ArrayList<String> names;
-        private ArrayList<BigDecimal> values;
+        private ArrayList<Entry> expenses;
         private final int RESOURCE_ID = R.layout.item_conjugation;
 
-        public EntryAdapter(ArrayList<String> names, ArrayList<BigDecimal> values) {
-            this.names = names;
-            this.values = values;
+        public EntryAdapter(ArrayList expenses) {
+            this.expenses = expenses;
         }
 
         @Override
@@ -73,10 +71,10 @@ public class DayActivity extends AppCompatActivity {
             }
             TextView nameView = (TextView)view.findViewById(R.id.conjFormal);
             TextView amtView = (TextView) view.findViewById(R.id.conjText);
-            nameView.setText(names.get(i));
+            nameView.setText(expenses.get(i).getSource());
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(getResources().getConfiguration().locale);
-            String value = currencyFormatter.format(values.get(i));
+            String value = currencyFormatter.format(expenses.get(i).getValue());
             amtView.setText(value);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -92,12 +90,12 @@ public class DayActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return names.size();
+            return expenses.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return names.get(i);
+            return expenses.get(i);
         }
 
         @Override
@@ -142,9 +140,19 @@ public class DayActivity extends AppCompatActivity {
     }
 
 
-    private BigDecimal calculateTotal(ArrayList<BigDecimal> expenses){
+    private BigDecimal calculateTotal(ArrayList<Expense> expenses){
         BigDecimal total = new BigDecimal(0);
-        for(BigDecimal d: expenses){
+        for(Expense e : expenses){
+            BigDecimal d = new BigDecimal(e.getValue());
+            total = total.add(d);
+        }
+        return total;
+    }
+
+    private BigDecimal calculateEarnTotal(ArrayList<Earning> expenses){
+        BigDecimal total = new BigDecimal(0);
+        for(Earning e : expenses){
+            BigDecimal d = new BigDecimal(e.getValue());
             total = total.add(d);
         }
         return total;

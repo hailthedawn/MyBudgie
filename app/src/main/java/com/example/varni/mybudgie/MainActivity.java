@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -29,15 +31,7 @@ public class MainActivity extends AppCompatActivity {
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                Intent i = new Intent(MainActivity.this,DayActivity.class);
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dateClicked);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
                 requestData(dateClicked);
-                i.putExtra("month",month);
-                i.putExtra("day",day);
-                startActivity(i);
             }
 
             @Override
@@ -58,10 +52,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void requestData(Date date){
+    private void requestData(final Date date){
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-        String dateString = sdf.format(date);
+        final String dateString = sdf.format(date);
         System.out.println(dateString);
+        Utils.getExpenses(dateString,this,new Utils.expenseListener() {
+            @Override
+            public void onResult(ArrayList<Expense> expenses) {
+                final Intent i = new Intent(MainActivity.this,DayActivity.class);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                i.putExtra("month",month);
+                i.putExtra("day",day);
+                i.putExtra("expenses",expenses);
+
+                Utils.getEarnings(dateString, getBaseContext(), new Utils.earningListener() {
+                    @Override
+                    public void onResult(ArrayList<Earning> earnings) {
+                        i.putExtra("earnings",earnings);
+                        startActivity(i);
+                    }
+                });
+            }
+        });
     }
 
     public void onClick(View view){
