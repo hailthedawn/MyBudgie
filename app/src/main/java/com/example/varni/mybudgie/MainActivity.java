@@ -3,13 +3,12 @@ package com.example.varni.mybudgie;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
                 cal.setTime(dateClicked);
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
+                requestData(dateClicked);
                 i.putExtra("month",month);
                 i.putExtra("day",day);
                 startActivity(i);
@@ -48,5 +48,23 @@ public class MainActivity extends AppCompatActivity {
                 monthText.setText(months[month]);
             }
         });
+
+        findViewById(R.id.add_entry).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this,AddActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    private void requestData(Date date){
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        String dateString = sdf.format(date);
+        System.out.println(dateString);
+    }
+
+    public void onClick(View view){
+
     }
 }

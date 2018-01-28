@@ -28,4 +28,14 @@
         app:compactCalendarTargetHeight="250dp"
         app:compactCalendarTextColor="#fff"
         app:compactCalendarTextSize="12sp" />
+
+    <Button
+        android:id="@+id/add_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/compactcalendar_view"
+        android:layout_marginTop="50dp"
+        android:text="Add"
+        android:onClick="onClick"/>
 </RelativeLayout>
