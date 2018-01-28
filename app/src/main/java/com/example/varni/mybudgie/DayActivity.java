@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,9 @@ public class DayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         getSupportActionBar().setTitle("Jan. 27th Summary");
+        int month = getIntent().getIntExtra("month",0);
+        int day = getIntent().getIntExtra("day",0);
+        setUpActionBar(month,day);
 
         TextView totalText = (TextView)findViewById(R.id.total_amt);
         ListView expensesView = (ListView)findViewById(R.id.expenses_list);
@@ -144,6 +148,13 @@ public class DayActivity extends AppCompatActivity {
             total = total.add(d);
         }
         return total;
+    }
+
+    private void setUpActionBar(int month, int day){
+        ActionBar actionBar = getSupportActionBar();
+        final String[] months={"January","February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"};
+        actionBar.setTitle(months[month]+" "+day);
     }
 
 }
